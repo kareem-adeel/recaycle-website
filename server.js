@@ -3,7 +3,7 @@ import path from 'path'
 import dotenv from 'dotenv'
 import bootstrap from './src/bootstrap.js'
 import cors from 'cors'
-dotenv.config({path:path.resolve("./config/.env")})
+dotenv.config()
 const app = express()
 
 // var whitelist = ['http://example1.com', 'http://example2.com']
