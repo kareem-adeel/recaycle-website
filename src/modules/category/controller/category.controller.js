@@ -80,8 +80,8 @@ export const updateCategory = asyncHandler(
       if (!secure_url) {
         return next(new Error("Iamge Not Found", { cause: 400 }));
       }
-      req.body.Image = { secure_url, public_id };
-      await cloudinary.uploader.destroy(category.Image.public_id);
+      req.body.image = { secure_url, public_id };
+      await cloudinary.uploader.destroy(category.image.public_id);
     }
 
     req.body.updatedBy=req.user._id
