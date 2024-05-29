@@ -9,7 +9,7 @@ export const categorySchema=new Schema({
         trim:true,
         lowerCase:true
     },
-    Image:{
+    image:{
         type:Object,
         required:[true,"Image Is Required"]
     },
