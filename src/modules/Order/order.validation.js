@@ -16,7 +16,9 @@ export const createOrderSchema=joi.object({
     
     products:joi.array().items(joi.object({
         productId:generalFields.id,
-        quantity:joi.number().positive().integer().required()
+        quantity:joi.number().positive().integer().required(),
+        paymentOption: joi.string().valid('cash', 'points').required(), // خيار الدفع
+
     }).required())
 }).required()
 

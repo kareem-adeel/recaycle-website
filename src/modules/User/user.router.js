@@ -7,18 +7,7 @@ import validation from '../../middleware/validation.js'
 const router=Router()
 
 router
-    .patch(
-        '/addToWishList/:productId',
-        auth(userEndPoints.add),
-        validation(uservalidtion.userSchema),
-        userController.addToWishList
-    )
-    .patch(
-        '/removeFromWishList/:productId',
-        auth(userEndPoints.remove),
-        validation(uservalidtion.userSchema),
-         userController.removeFromWishList
-    )
+    
     .delete(
         "/:userId",
         validation(uservalidtion.tokenSchema,true),

@@ -148,7 +148,7 @@ export const logIn = asyncHandler(async (req, res, next) => {
   //email exist
   const user = await userModel.findOne({ email });
   if (!user) {
-    return next(new Error("Email Or Password Incorrect", { cause: 400 }));
+    return next(new Error("email not exist", { cause: 400 }));
   }
   //check if email confirmed
   if (!user.confirmEmail) {

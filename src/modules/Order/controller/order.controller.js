@@ -3,114 +3,107 @@ import productModel from "../../../../DB/models/Product.model.js";
 import userModel from "../../../../DB/models/User.model.js";
 import { asyncHandler } from "../../../utils/errorHandling.js";
 
-// Create Order
-export const createOrder = asyncHandler(async (req, res, next) => {
-    const { _id } = req.user;
-    const { products, paymentType, address, phone, note, reason } = req.body;
-    let subPoints = 0;
+// --------------Create Order-------------
+export const createOrder = asyncHandler(async (req, res) => {
+    const { address, phone, paymentTypes, note, products } = req.body;
+    const userId = req.user._id;
 
-    if (!products?.length) {
-        return next(new Error("Products are required", { cause: 400 }));
-    }
-
-    const allProducts = [];
-    for (const product of products) {
-        const productExist = await productModel.findOne({
-            _id: product.productId,
-            isDeleted: false,
-        });
-
-        if (!productExist) {
-            return next(new Error("Product not found", { cause: 400 }));
+    // تحقق من صحة المنتجات وكمياتها
+    for (let item of products) {
+        const product = await productModel.findById(item.productId);
+        if (!product) {
+            return res.status(400).json({ message: 'Product not found' });
         }
-
-        product.name = productExist.name;
-        product.unitPoints = productExist.unitPoints; // Assuming unitPoints represents points for each unit
-        product.totalPoints = productExist.unitPoints * product.quantity;
-        allProducts.push(product);
-        subPoints += product.unitPoints * product.quantity;
+        if (product.stock < item.quantity) {
+            return res.status(400).json({ message: `Insufficient stock for product: ${product.name}` });
+        }
     }
 
-    const status = paymentType === "cash" ? "placed" : "waitForPayment";
-
+    // إنشاء الطلب
     const order = await orderModel.create({
-        userId: _id,
+        userId,
         address,
         phone,
-        paymentType,
+        paymentTypes,
         note,
-        reason,
-        products: allProducts,
-        subPoints,
-        finalPoints: 0, // Final points will be updated later when the order is delivered
-        status,
+        products
     });
 
-    return res.json({ message: "Order created successfully", order });
+    res.status(201).json({ message: 'Order created successfully', order });
 });
 
-// Cancel Order
-export const cancelOrder = asyncHandler(async (req, res, next) => {
+//--------- Cancel Order------------
+export const cancelOrder = asyncHandler(async (req, res) => {
     const { orderId } = req.params;
-    const { _id } = req.user;
+    const userId = req.user._id;
 
     const order = await orderModel.findById(orderId);
-
-    if (!order) {
-        return next(new Error("Order not found", { cause: 404 }));
+    if (!order || order.userId.toString() !== userId.toString()) {
+        return res.status(404).json({ message: 'Order not found or you are not authorized to cancel this order' });
     }
 
-    if (order.status !== "placed" && order.status !== "waitForPayment") {
-        return next(new Error("Order cannot be cancelled", { cause: 400 }));
-    }
-
-    // Refund points if payment type is points
-    if (order.paymentType === "points") {
-        await userModel.updateOne(
-            { _id: order.userId },
-            { $inc: { points: order.subPoints } }
-        );
-    }
-
-    order.status = "cancelled";
-    order.updatedBy = _id;
+    order.status = 'canceled';
     await order.save();
 
-    return res.status(200).json({ message: "Order cancelled successfully", order });
+    res.status(200).json({ message: 'Order canceled successfully', order });
 });
 
-// Deliver Order
-export const deliverOrder = asyncHandler(async (req, res, next) => {
+//-------------- Deliver Order--------------
+export const deliverOrder = asyncHandler(async (req, res) => {
     const { orderId } = req.params;
 
     const order = await orderModel.findById(orderId);
-
     if (!order) {
-        return next(new Error("Order not found", { cause: 404 }));
+        return res.status(404).json({ message: 'Order not found' });
     }
 
-    if (order.status !== "placed") {
-        return next(new Error("Order cannot be marked as delivered", { cause: 400 }));
+    // حساب النقاط الإجمالية للطلب
+    let totalPoints = 0;
+    for (let item of order.products) {
+        const product = await productModel.findById(item.productId);
+        if (product) {
+            totalPoints += product.points * item.quantity;
+        }
     }
 
-    // Update final points and status
-    order.finalPoints = order.subPoints;
-    order.status = "delivered";
-    order.updatedBy = req.user._id;
+    // تحديث حالة الطلب
+    order.status = 'delivered';
     await order.save();
 
-    // Add points to user account if payment type is points
-    if (order.paymentType === "points") {
-        await userModel.updateOne(
-            { _id: order.userId },
-            { $inc: { points: order.subPoints } }
-        );
+    if (order.paymentOption === 'points') {
+        // تحديث نقاط المستخدم
+        const user = await userModel.findById(order.userId);
+        if (user) {
+            user.points += totalPoints;
+            await user.save();
+        }
+        res.status(200).json({ message: 'Order delivered successfully and points added', order, totalPoints, userPoints: user.points });
+    } else if (order.paymentOption === 'cash') {
+        const cashAmount = totalPoints * 0.5; // تحويل النقاط إلى مبلغ نقدي
+        res.status(200).json({ message: 'Order delivered successfully and cash payment selected', order, cashAmount });
     }
-
-    return res.status(200).json({ message: "Order delivered successfully", order });
 });
 
-// Webhook
-export const webHook = asyncHandler(async (req, res, next) => {
-    return res.status(501).json({ message: "Webhook not implemented" });
+
+
+export const convertPointsToCash = asyncHandler(async (req, res) => {
+    const userId = req.user._id;
+    const user = await userModel.findById(userId);
+    if (!user) {
+        return res.status(404).json({ message: 'User not found' });
+    }
+
+    const cashAmount = user.points * 0.5; // تحويل النقاط إلى مبلغ نقدي
+    user.points = 0; // إعادة تعيين النقاط بعد التحويل
+    await user.save();
+
+    // هنا نضيف منطق لتحويل النقود إلى حساب المستخدم البنكي
+
+    res.status(200).json({ message: 'Points converted to cash successfully', cashAmount });
+});
+
+// Webhook handler
+export const webHook = asyncHandler(async (req, res) => {
+    // معالجة webhook هنا
+    res.status(200).json({ message: 'Webhook received' });
 });
