@@ -1,7 +1,7 @@
 import { roles } from "../../middleware/auth.js"
 
 const categoryEndPoints={
-    create:[roles.Admin],
+    create:[roles.User],
     update:[roles.Admin],
     delete:[roles.Admin]
 }

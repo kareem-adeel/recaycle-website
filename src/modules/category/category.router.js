@@ -10,7 +10,7 @@ const router=Router()
 //Create Category 
 router
     .post(
-    "/add",
+        "/add",
     validation(categoryValidation.tokenSchema,true),
     auth(categoryEndPoints.create),
     uploadFileCloud({customValidtion:filevalidtion.image}).single('image'),
