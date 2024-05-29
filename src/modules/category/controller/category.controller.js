@@ -23,7 +23,7 @@ export const createCategory =asyncHandler(
     if (!secure_url) {
       return next(new Error("Iamge Not Found", { cause: 400 }));
     }
-    req.body.Image = { secure_url, public_id };
+    req.body.image = { secure_url, public_id };
   
     req.body.slug = slugify(name);
 

@@ -14,7 +14,7 @@ router
     '/createProduct',
     validation(productValiation.tokenSchema,true),   
     auth(productEndPoints.create),
-    uploadFileCloud({customValidtion: filevalidtion.Image}).fields([
+    uploadFileCloud({customValidtion: filevalidtion.image}).fields([
         {name:'mainImage',maxCount:1},
         {name:'subImages',maxCount:6}
     ]),
@@ -25,7 +25,7 @@ router
         '/:productId',
         validation(productValiation.tokenSchema,true),
         auth(productEndPoints.update),
-        uploadFileCloud({customValidtion:filevalidtion.Image}).fields([
+        uploadFileCloud({customValidtion:filevalidtion.image}).fields([
             {name:'mainImage',maxCount:1},
             {name:'subImages',maxCount:6}
         ]),
