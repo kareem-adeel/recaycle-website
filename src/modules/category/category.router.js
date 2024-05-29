@@ -13,7 +13,7 @@ router
         "/add",
     validation(categoryValidation.tokenSchema,true),
     auth(categoryEndPoints.create),
-    uploadFileCloud({customValidtion:filevalidtion.image}).single('image'),
+    uploadFileCloud({customValidtion:filevalidtion.Image}).single('Image'),
     validation(categoryValidation.createCategorySchema),
     categoryController.createCategory
     )
@@ -30,7 +30,7 @@ router
         "/:categoryId",
         validation(categoryValidation.tokenSchema,true),
         auth(categoryEndPoints.update),
-        uploadFileCloud({customValidtion:filevalidtion.image}).single('image'),
+        uploadFileCloud({customValidtion:filevalidtion.Image}).single('Image'),
         validation(categoryValidation.updateCategorySchema),
         categoryController.updateCategory
     )
