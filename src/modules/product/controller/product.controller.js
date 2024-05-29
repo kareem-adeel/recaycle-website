@@ -85,12 +85,9 @@ export const updateProduct=asyncHandler(
       } 
     //CategoryId-->if exist
 
-    if (!await categoryModel.findById({_id:req.body.categoryId})) {
-      return next(new Error("Category Not Found",{cause:404}))
-      
+    if (req.body.categoryId && !await categoryModel.findById(req.body.categoryId)) {
+      return next(new Error("Category Not Found", { cause: 404 }));
     }
-
-
 
       
  
@@ -122,7 +119,7 @@ export const updateProduct=asyncHandler(
       }
       
         
-       
+
 
       //Check subImages
         if(req.files?.subImages){
