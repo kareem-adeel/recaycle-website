@@ -2,6 +2,11 @@ import productModel from "../../../../DB/models/Product.model.js";
 import userModel from "../../../../DB/models/User.model.js";
 import { asyncHandler } from "../../../utils/errorHandling.js";
 
+import Stripe from 'stripe';
+
+
+const stripe = new Stripe(process.env.STRIPE_SECRET_KEY); // تأكد من ضبط مفتاح Stripe السري في ملف البيئة
+
 
 
 //delete user
@@ -20,8 +25,8 @@ export const deleteUser=asyncHandler(
   
     }
   )
-  //-------------تحويل النقاط الي فلوس --------
-export const convertPointsToCash = asyncHandler(async (req, res) => {
+  //-------------change points--------
+  export const convertPointsToCash = asyncHandler(async (req, res) => {
     const userId = req.user._id;
     const user = await userModel.findById(userId);
     if (!user) {
@@ -29,10 +34,25 @@ export const convertPointsToCash = asyncHandler(async (req, res) => {
     }
 
     const cashAmount = user.points * 0.5; // تحويل النقاط إلى مبلغ نقدي
+
+    // معلومات حساب Stripe للمستخدم
+    const { stripeAccountId } = user; // افتراض أن هذا المعرف موجود في نموذج المستخدم
+
+    if (!stripeAccountId) {
+        return res.status(400).json({ message: 'Stripe account details are missing' });
+    }
+
+    // إنشاء تحويل الأموال
+    const transfer = await stripe.transfers.create({
+        amount: Math.round(cashAmount * 100), // تحويل المبلغ إلى سنتات
+        currency: 'usd',
+        destination: stripeAccountId,
+        transfer_group: `USER_${userId}` // تغيير group_transfer للتعبير عن المستخدم
+    });
+
+    // تحديث نقاط المستخدم بعد نجاح التحويل
     user.points = 0; // إعادة تعيين النقاط بعد التحويل
     await user.save();
 
-    // هنا نضيف منطق لتحويل النقود إلى حساب المستخدم البنكي
-
-    res.status(200).json({ message: 'Points converted to cash successfully', cashAmount });
+    res.status(200).json({ message: 'Points converted to cash and transferred successfully', cashAmount, transfer });
 });
