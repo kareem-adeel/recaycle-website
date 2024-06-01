@@ -10,7 +10,7 @@ export const createOrderSchema=joi.object({
     
     address:joi.string().required(),
     phone:joi.array().items(joi.string().required()).required(),
-    paymentTypes:joi.string().valid('cash','card'),
+    paymentTypes:joi.string().valid('cash','points'),
     note:joi.string(),
     reason:joi.string(),
     
