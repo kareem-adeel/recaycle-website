@@ -7,7 +7,7 @@ export const signUpSchema=joi.object({
     password:generalFields.password.required(),
     age:joi.number(),
     phone:joi.string(),
-    cPassword:joi.string().valid(joi.ref('password')).required()
+    rePassword:joi.string().valid(joi.ref('password')).required()
 
 }).required()
 
@@ -29,6 +29,6 @@ export const forgetPasswordSchema=joi.object({
     email:generalFields.email.required(),
     code:joi.string().pattern(new RegExp(/^[0-9]{5}$/)).required(),
     password:generalFields.password.required(),
-    cPassword:joi.string().valid(joi.ref('password')).required()
+    rePassword:joi.string().valid(joi.ref('password')).required()
 
 }).required()
