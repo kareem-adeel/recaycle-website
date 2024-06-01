@@ -48,7 +48,10 @@ age:Number,
 phone:String,
 address:String,
 DOB:String,
-
+stripeAccountId: {
+    type: String, // معرف حساب Stripe
+    required: false,
+  },
 
 
 

@@ -1,11 +1,11 @@
-import productModel from "../../../../DB/models/Product.model.js";
 import userModel from "../../../../DB/models/User.model.js";
 import { asyncHandler } from "../../../utils/errorHandling.js";
+import payment from "../../../utils/payment.js";
 
 import Stripe from 'stripe';
 
 
-const stripe = new Stripe(process.env.STRIPE_SECRET_KEY); // تأكد من ضبط مفتاح Stripe السري في ملف البيئة
+const stripe = new Stripe(process.env.STRIPE_SECRET_KEY);
 
 
 
@@ -25,34 +25,35 @@ export const deleteUser=asyncHandler(
   
     }
   )
-  //-------------change points--------
+
   export const convertPointsToCash = asyncHandler(async (req, res) => {
     const userId = req.user._id;
     const user = await userModel.findById(userId);
     if (!user) {
         return res.status(404).json({ message: 'User not found' });
     }
-
-    const cashAmount = user.points * 0.3; // تحويل النقاط إلى مبلغ نقدي
-
-    // معلومات حساب Stripe للمستخدم
-    const { stripeAccountId } = user; // افتراض أن هذا المعرف موجود في نموذج المستخدم
-
-    if (!stripeAccountId) {
-        return res.status(400).json({ message: 'Stripe account details are missing' });
+    const minPointsRequired = 80;
+    if (user.points < minPointsRequired) {
+        return res.status(400).json({ message: `User does not have enough points. Minimum ${minPointsRequired} points required.` });
     }
 
-    // إنشاء تحويل الأموال
-    const transfer = await stripe.transfers.create({
-        amount: Math.round(cashAmount * 100), // تحويل المبلغ إلى سنتات
-        currency: 'usd',
-        destination: stripeAccountId,
-        transfer_group: `USER_${userId}` // تغيير group_transfer للتعبير عن المستخدم
+    const cashAmount = user.points * 0.3; 
+
+    const session = await payment({
+        customer_email: req.user.email,
+        line_items: [{
+            price_data: {
+                currency: "usd",
+                product_data: {
+                    name: "Cash conversion"
+                },
+                unit_amount: cashAmount 
+            },
+            quantity: 1
+        }],
+        success_url: `${process.env.SUCCUESS_URL}`,
+        cancel_url: `${process.env.CANCEL_URL}`
     });
 
-    // تحديث نقاط المستخدم بعد نجاح التحويل
-    user.points = 0; // إعادة تعيين النقاط بعد التحويل
-    await user.save();
-
-    res.status(200).json({ message: 'Points converted to cash and transferred successfully', cashAmount, transfer });
+    return res.json({ message: "Stripe Checkout session created", session });
 });
