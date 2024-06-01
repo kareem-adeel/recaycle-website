@@ -33,7 +33,7 @@ export const deleteUser=asyncHandler(
         return res.status(404).json({ message: 'User not found' });
     }
 
-    const cashAmount = user.points * 0.5; // تحويل النقاط إلى مبلغ نقدي
+    const cashAmount = user.points * 0.3; // تحويل النقاط إلى مبلغ نقدي
 
     // معلومات حساب Stripe للمستخدم
     const { stripeAccountId } = user; // افتراض أن هذا المعرف موجود في نموذج المستخدم

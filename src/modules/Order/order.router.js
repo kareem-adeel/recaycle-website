@@ -22,7 +22,7 @@ router
     )
     .patch(
         '/deliver/:orderId',
-        auth(orderEndPoints.cancel),
+        auth(orderEndPoints.deliver),
         validation(orderValidation.orderSchema),
         orderController.deliverOrder
     )

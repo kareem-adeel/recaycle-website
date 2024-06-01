@@ -34,7 +34,7 @@ export const orderSchema=new Schema({
         note:String,
         paymentTypes:{
             type:String,
-            enum:['cash','points'],
+            enum:['cash','points','Donate'],
             default:'cash'
         },
         status:{

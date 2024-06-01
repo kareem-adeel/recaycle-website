@@ -40,8 +40,8 @@ confirmEmail:{
     default:false
 },
 points:{
-    type:String,
-    
+    type:Number,
+    min:1
 },
 code:String,
 age:Number,

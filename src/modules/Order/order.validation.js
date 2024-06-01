@@ -10,15 +10,14 @@ export const createOrderSchema=joi.object({
     
     address:joi.string().required(),
     phone:joi.array().items(joi.string().required()).required(),
-    paymentTypes:joi.string().valid('cash','points'),
+    paymentTypes:joi.string().valid('cash','points','Donate'),
     note:joi.string(),
     reason:joi.string(),
     
     products:joi.array().items(joi.object({
         productId:generalFields.id,
         quantity:joi.number().positive().integer().required(),
-        paymentOption: joi.string().valid('cash', 'points').required(), // خيار الدفع
-
+        paymentOption: joi.string().valid('cash', 'points','Donate').required(), // خيار الدفع
     }).required())
 }).required()
 
