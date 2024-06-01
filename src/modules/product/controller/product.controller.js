@@ -29,6 +29,12 @@ export const createProduct=asyncHandler(
             trim:true
         })
 
+          // تحقق من وجود المنتج بنفس الاسم مسبقًا
+          const existingProduct = await productModel.findOne({ slug: req.body.slug });
+          if (existingProduct) {
+              return next(new Error("Product with the same name already exists", { cause: 409 }));
+          }
+
         
         req.body.finalPoint=points
 
