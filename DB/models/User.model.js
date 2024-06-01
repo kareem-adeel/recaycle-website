@@ -41,7 +41,7 @@ confirmEmail:{
 },
 points:{
     type:String,
-    default:0
+    
 },
 code:String,
 age:Number,
