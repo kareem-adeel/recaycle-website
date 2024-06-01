@@ -27,7 +27,7 @@ const auth=(role=Object.values(roles))=>{
             return next (new Error("Invalid payload",{cause:404}))
         }
     
-        const user=await userModel.findOne({_id:payload._id}).select('userName email role status')
+        const user=await userModel.findOne({_id:payload._id}).select('Name email role status')
         if(!user){
             return next ( new Error("The User Doesn't Exist",{cause:404}))
         }

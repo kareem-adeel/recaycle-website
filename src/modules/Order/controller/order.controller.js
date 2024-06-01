@@ -6,7 +6,7 @@ import cartModel from "../../../../DB/models/Cart.model.js"
 
 // --------------Create Order-------------
 export const createOrder = asyncHandler(async (req, res) => {
-    const { address, phone, paymentTypes, note} = req.body;
+    const { address, paymentTypes, note} = req.body;
     const userId = req.user._id;
 
     const cart = await cartModel.findOne({ userId });
@@ -26,7 +26,7 @@ export const createOrder = asyncHandler(async (req, res) => {
     const order = await orderModel.create({
         userId,
         address,
-        phone,
+        
         paymentTypes,
         note,
         

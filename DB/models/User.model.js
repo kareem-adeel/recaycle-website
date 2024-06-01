@@ -3,9 +3,9 @@ import mongoose, { Schema,Types,model } from "mongoose";
 
 
 const userSchema=new Schema({
-userName:{
+Name:{
     type:String,
-    required:[true,'userName Required'],
+    required:[true,'Name is Required'],
     min:[2,'Minimum length'],
     max:[20,'Maximum length'],
     lowerCase:true
@@ -45,7 +45,6 @@ points:{
 },
 code:String,
 age:Number,
-phone:String,
 address:String,
 DOB:String,
 stripeAccountId: {

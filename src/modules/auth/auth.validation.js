@@ -2,11 +2,11 @@ import joi from "joi";
 import generalFields from "../../utils/generalFields.js";
 
 export const signUpSchema=joi.object({
-    userName:joi.string().min(2).max(20).required(),
+    Name:joi.string().min(2).max(20).required(),
     email:generalFields.email.required(),
     password:generalFields.password.required(),
     age:joi.number(),
-    phone:joi.string(),
+    
     rePassword:joi.string().valid(joi.ref('password')).required()
 
 }).required()

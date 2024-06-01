@@ -26,10 +26,7 @@ export const orderSchema=new Schema({
             type:String,
             required:[true,"Address Number Is required"]
         },
-        phone:{
-            type:[String],
-            required:[true,"Phone Number Is required"]
-        },
+        
         
         note:String,
         paymentTypes:{

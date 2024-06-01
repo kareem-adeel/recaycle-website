@@ -9,7 +9,6 @@ export const tokenSchema=joi.object({
 export const createOrderSchema=joi.object({
     
     address:joi.string().required(),
-    phone:joi.array().items(joi.string().required()).required(),
     paymentTypes:joi.string().valid('cash','points','Donate'),
     note:joi.string(),
     reason:joi.string(),
