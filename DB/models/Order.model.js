@@ -9,12 +9,7 @@ export const orderSchema=new Schema({
             
         },
         products:[
-            {   name:{
-                    type:String,
-                    required:[true,"Phone Number Is required"],
-                    min:3,
-                    max:30
-                },
+            {  
                 productId:{
                     type:Types.ObjectId,
                     required:true,
@@ -23,12 +18,8 @@ export const orderSchema=new Schema({
                 quantity:{
                     type:Number,
                 required:true
-                },
-                totalPoints:{
-                    type:Number,
-                    required:[true,"totalPoints Number Is required"],
-                    min:1
-                },
+                }
+                
             }
         ],
         address:{
@@ -39,16 +30,7 @@ export const orderSchema=new Schema({
             type:[String],
             required:[true,"Phone Number Is required"]
         },
-        finalPoints:{
-            type:Number,
-            required:[true,"finalPoint Number Is required"],
-            min:1
-        },
-        subPoints:{
-            type:Number,
-            required:[true,"subpoint Number Is required"],
-            min:1
-        },
+        
         note:String,
         paymentTypes:{
             type:String,
@@ -57,7 +39,7 @@ export const orderSchema=new Schema({
         },
         status:{
             type:String,
-            enum:['placed','onWay','cancel','rejected','deliverd'],
+            enum:['placed','onWay','canceled','rejected','delivered'],
             default:'placed'
         },
         updatedBy:{

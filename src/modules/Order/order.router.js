@@ -15,13 +15,13 @@ router
         orderController.createOrder 
     )
     .patch(
-        '/:orderId/canceled',
+        '/:orderId',
         auth(orderEndPoints.cancel),
         validation(orderValidation.orderSchema),
         orderController.cancelOrder
     )
     .patch(
-        '/:orderId/deliverd',
+        '/deliver/:orderId',
         auth(orderEndPoints.cancel),
         validation(orderValidation.orderSchema),
         orderController.deliverOrder

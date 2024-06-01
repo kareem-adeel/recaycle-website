@@ -39,12 +39,16 @@ confirmEmail:{
     type:Boolean,
     default:false
 },
+points:{
+    type:String,
+    default:0
+},
 code:String,
 age:Number,
 phone:String,
 address:String,
 DOB:String,
-points:Number
+
 
 
 
