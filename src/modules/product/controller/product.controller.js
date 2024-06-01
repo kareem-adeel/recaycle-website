@@ -14,7 +14,7 @@ import cloudinary from "../../../utils/cloudinary.js";
 export const createProduct=asyncHandler(
     async(req,res,next)=>{
         //1-get categoryId
-        const {categoryId,point}=req.body
+        const {categoryId,points}=req.body
         if (!await categoryModel.findById({_id:categoryId})) {
             return next(new Error("Category Not Found",{cause:404}))
             
@@ -29,8 +29,8 @@ export const createProduct=asyncHandler(
             trim:true
         })
 
-        //3-calculte final point -->point-((point*discount)/100)
-        req.body.finalPoint=point
+        
+        req.body.finalPoint=points
 
         //4-create customId
         req.body.customId=nanoid()
@@ -100,7 +100,7 @@ export const updateProduct=asyncHandler(
         }
 
       //Update final point
-      req.body.finalPoint= req.body.point
+      req.body.finalPoint= req.body.points
 
       
 

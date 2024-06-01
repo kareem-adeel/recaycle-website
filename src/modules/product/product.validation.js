@@ -9,7 +9,7 @@ export const tokenSchema=joi.object({
 export const createProductSchema=joi.object({
     name:joi.string().min(3).max(30).required(),
     description:joi.string().min(3).max(70),
-    point:joi.number().positive().required(),
+    points:joi.number().positive().required(),
     discount:joi.number().positive(),
     
     size:joi.array(),
@@ -25,7 +25,7 @@ export const createProductSchema=joi.object({
 export const updateProductSchema=joi.object({
     name:joi.string().min(3).max(30),
     description:joi.string().min(3).max(70),
-    point:joi.number().positive(),
+    points:joi.number().positive(),
     discount:joi.number().positive(),
     
     size:joi.array(),
