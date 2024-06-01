@@ -23,7 +23,7 @@ export const productSchema=new Schema({
     subImages:[{
         type:Object,
     }],
-    point:{
+    points:{
         type:Number,
         required:[true,"point Is Required"],
         min:1

@@ -15,6 +15,12 @@ router
         userController.deleteUser
         )
 
+        .post(
+            '/convert-points-to-cash',
+            auth(userEndPoints.change),
+            userController.convertPointsToCash
+        );
+
 
 
 

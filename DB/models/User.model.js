@@ -44,6 +44,7 @@ age:Number,
 phone:String,
 address:String,
 DOB:String,
+points:Number
 
 
 

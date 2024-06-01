@@ -14,9 +14,7 @@ export const createOrder = asyncHandler(async (req, res) => {
         if (!product) {
             return res.status(400).json({ message: 'Product not found' });
         }
-        if (product.stock < item.quantity) {
-            return res.status(400).json({ message: `Insufficient stock for product: ${product.name}` });
-        }
+        
     }
 
     // إنشاء الطلب
@@ -86,21 +84,6 @@ export const deliverOrder = asyncHandler(async (req, res) => {
 
 
 
-export const convertPointsToCash = asyncHandler(async (req, res) => {
-    const userId = req.user._id;
-    const user = await userModel.findById(userId);
-    if (!user) {
-        return res.status(404).json({ message: 'User not found' });
-    }
-
-    const cashAmount = user.points * 0.5; // تحويل النقاط إلى مبلغ نقدي
-    user.points = 0; // إعادة تعيين النقاط بعد التحويل
-    await user.save();
-
-    // هنا نضيف منطق لتحويل النقود إلى حساب المستخدم البنكي
-
-    res.status(200).json({ message: 'Points converted to cash successfully', cashAmount });
-});
 
 // Webhook handler
 export const webHook = asyncHandler(async (req, res) => {

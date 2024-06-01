@@ -34,11 +34,7 @@ router
 
 router.post('/webhook', express.raw({type: 'application/json'}),orderController.webHook );
 
-router.post(
-    '/convert-points-to-cash',
-    auth(orderEndPoints.change),
-    orderController.convertPointsToCash
-);
+
 
 
 
