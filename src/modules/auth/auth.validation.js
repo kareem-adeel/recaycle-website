@@ -2,7 +2,7 @@ import joi from "joi";
 import generalFields from "../../utils/generalFields.js";
 
 export const signUpSchema=joi.object({
-    Name:joi.string().min(2).max(20).required(),
+    name:joi.string().min(2).max(20).required(),
     email:generalFields.email.required(),
     password:generalFields.password.required(),
     age:joi.number(),

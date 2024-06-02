@@ -3,9 +3,9 @@ import mongoose, { Schema,Types,model } from "mongoose";
 
 
 const userSchema=new Schema({
-Name:{
+name:{
     type:String,
-    required:[true,'Name is Required'],
+    required:[true,'name is Required'],
     min:[2,'Minimum length'],
     max:[20,'Maximum length'],
     lowerCase:true

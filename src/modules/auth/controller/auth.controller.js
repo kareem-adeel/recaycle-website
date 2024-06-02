@@ -58,7 +58,7 @@ export const signUp = asyncHandler(async (req, res, next) => {
 
   //create user
   const user = await userModel.create(req.body);
-  user.points = 0
+  
   return res.status(200).json({ message: "done", user });
 });
 

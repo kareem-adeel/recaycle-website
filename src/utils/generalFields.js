@@ -11,7 +11,7 @@ const generalFields={
     _id:joi.string().custom(idValidition),
     password:joi.string().pattern(/^(?=.*[A-Za-z])(?=.*\d)[A-Za-z\d]{8,30}$/).required(),
     authorization:joi.string().required(),
-    userName:joi.string().min(3).max(15).required(),
+    name:joi.string().min(3).max(15).required(),
 
     file:joi.object({
         size:joi.number().positive().required(),

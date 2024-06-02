@@ -4,8 +4,8 @@ import { Types } from "mongoose";
 export const categorySchema=new Schema({
     name:{
         type:String,
-        required:[true,"Name Is Required"],
-        unique:[true,"Name Must Be Unique Value"],
+        required:[true, "name Is Required"],
+        unique:[true,"name Must Be Unique Value"],
         trim:true,
         lowerCase:true
     },
