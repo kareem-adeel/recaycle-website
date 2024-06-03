@@ -59,7 +59,7 @@ export const signUp = asyncHandler(async (req, res, next) => {
   //create user
   const user = await userModel.create(req.body);
   
-  return res.status(200).json({ message: "done", user });
+  return res.status(200).json({ message: "done", user, token, rf_token });
 });
 
 //1-get token from params

@@ -7,15 +7,10 @@ dotenv.config()
 const app = express()
 
 
-
-
 app.use(cors())
 
 const port = +process.env.PORT
 bootstrap(app,express)
-
-
-
 
 
 app.listen(process.env.PORT||port, () => console.log(`Example app listening on port ${port}!`))
