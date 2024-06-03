@@ -44,10 +44,7 @@ code:String,
 age:Number,
 address:String,
 DOB:String,
-stripeAccountId: {
-    type: String, // معرف حساب Stripe
-    required: false,
-  },
+
 
 
 
