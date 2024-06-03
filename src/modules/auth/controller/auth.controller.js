@@ -28,13 +28,13 @@ export const signUp = asyncHandler(async (req, res, next) => {
   }
   //create token & links
   const token = generateToken({
-    payload: { email,role },
+    payload: { email },
     signature: process.env.SIGNUP_TOKEN_SIGNATURE,
     expiresIn: 60 * 30,
   });
 
   const rf_token = generateToken({
-    payload: { email,role },
+    payload: { email },
     signature: process.env.SIGNUP_TOKEN_SIGNATURE,
     expiresIn: 60 * 30,
   });
@@ -58,8 +58,13 @@ export const signUp = asyncHandler(async (req, res, next) => {
 
   //create user
   const user = await userModel.create(req.body);
+  const token1 = generateToken({
+    payload: { email,userId:user._id,role:user.role },
+    signature: process.env.SIGNUP_TOKEN_SIGNATURE,
+    expiresIn: 60 * 30,
+  });
   
-  return res.status(200).json({ message: "done", user, token, rf_token });
+  return res.status(200).json({ message: "done", user, token1 });
 });
 
 //1-get token from params
