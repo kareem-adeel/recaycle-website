@@ -28,13 +28,13 @@ export const signUp = asyncHandler(async (req, res, next) => {
   }
   //create token & links
   const token = generateToken({
-    payload: { email },
+    payload: { email,role },
     signature: process.env.SIGNUP_TOKEN_SIGNATURE,
     expiresIn: 60 * 30,
   });
 
   const rf_token = generateToken({
-    payload: { email },
+    payload: { email,role },
     signature: process.env.SIGNUP_TOKEN_SIGNATURE,
     expiresIn: 60 * 30,
   });
