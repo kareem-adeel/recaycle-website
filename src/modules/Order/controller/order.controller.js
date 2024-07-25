@@ -14,7 +14,7 @@ export const createOrder = asyncHandler(async (req, res) => {
         return res.status(400).json({ message: 'Cart is empty' });
     }
 
-    // تحقق من صحة المنتجات وكمياتها
+    //check product
     for (let item of cart.products) {
         const product = await productModel.findById(item.productId);
         if (!product) {
@@ -22,7 +22,7 @@ export const createOrder = asyncHandler(async (req, res) => {
         }
     }
 
-    // إنشاء الطلب باستخدام المنتجات من سلة التسوق
+    
     const order = await orderModel.create({
         userId,
         address,
@@ -33,7 +33,7 @@ export const createOrder = asyncHandler(async (req, res) => {
         products: cart.products
     });
 
-    // إفراغ سلة التسوق بعد إنشاء الطلب
+    // make cart empty after order
     cart.products = [];
     await cart.save();
 
